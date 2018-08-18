@@ -12,8 +12,15 @@ class App extends React.Component {
         groupRight: ['Lemon', 'Orange', 'Pear', 'Peach'],
         cloneUncontrolled: ['Apple', 'Banana', 'Cherry', 'Guava', 'Grape', 'Kiwi', 'Lemon', 'Melon', 'Orange', 'Pear', 'Peach', 'Strawberry'],
         cloneControlledSource: ['Apple', 'Banana', 'Cherry', 'Guava', 'Grape', 'Kiwi', 'Lemon', 'Melon', 'Orange', 'Pear', 'Peach', 'Strawberry'],
-        cloneControlledTarget: []
+        cloneControlledTarget: [],
+        disabled: false
     };
+
+    handleDisable = () => {
+        this.setState((prevState) => ({
+            disabled: !prevState.disabled
+        }));
+    }
 
     simpleList = null;
 
@@ -70,12 +77,20 @@ class App extends React.Component {
                         >
                             Reverse Order
                         </button>
+                        <button
+                            type="button"
+                            className="btn btn-default"
+                            onClick={this.handleDisable}
+                        >
+                            Disable
+                        </button>
                     </div>
                     <div className="row">
                         <div className="col-sm-12">
                             <Sortable
                                 options={{
-                                    animation: 150
+                                    animation: 150,
+                                    disabled: this.state.disabled
                                 }}
                                 className="block-list"
                                 ref={c => {

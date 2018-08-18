@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import SortableJS from 'sortablejs';
+import isEqual from 'lodash/isEqual';
 
 const store = {
     nextSibling: null,
@@ -81,6 +82,20 @@ class Sortable extends Component {
 
         this.sortable = SortableJS.create(ReactDOM.findDOMNode(this), options);
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (!isEqual(prevProps.options, this.props.options)) {
+            const prevOptions = prevProps.options;
+            const currOptions = this.props.options;
+
+            for (const opt in currOptions) {
+                if (prevOptions[opt] !== currOptions[opt]) {
+                    this.sortable.option(opt, currOptions[opt]);
+                }
+            }
+        }
+    }
+
     componentWillUnmount() {
         if (this.sortable) {
             this.sortable.destroy();
@@ -89,9 +104,6 @@ class Sortable extends Component {
     }
     render() {
         const { tag: Component, ...props } = this.props;
-
-        delete props.options;
-        delete props.onChange;
 
         return (
             <Component {...props} />
